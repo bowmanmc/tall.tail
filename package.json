@@ -9,7 +9,7 @@
     "express": "*",
     "ejs": "*",
     "nconf": "*",
-    "jquery": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "stylus": "*"
   }
 }

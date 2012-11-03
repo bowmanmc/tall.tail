@@ -8,6 +8,7 @@ var express = require('express')
   , fs = require('fs')
   , nconf = require('nconf')
   , io = require('socket.io')
+  , stylus = require('stylus')
 ;
 
 require('./TallTail.js'); //creates global TallTail obj
@@ -37,6 +38,17 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
+  // Setup Stylus
+  app.use(stylus.middleware({
+    src: __dirname + '/public/tail/styles', // .styl files are located in `views/stylesheets`
+    dest: __dirname + '/public/tail/styles', // .styl resources are compiled `/stylesheets/*.css`
+    compile: function (str, path, fn) { // optional, but recommended
+      stylus(str)
+      .set('filename', path)
+      .set('compress', true)
+      .render(fn);
+    }
+  })); //stylus setup end
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
