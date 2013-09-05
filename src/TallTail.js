@@ -1,4 +1,3 @@
-
 /**
  * TallTail.js
  * 
