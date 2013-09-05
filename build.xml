@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="tall.tail" default="all" basedir=".">
+
+	<property name="project.name" value="tall.tail" />
+    <property name="home" value="." />
+    <property name="src" value="${home}/src" />
+    <property name="build" value="${home}/build" />
+    <property name="dist" value="${home}/dist" />
+
+    <property file="${home}/build.properties" />
+    <property environment="env" />
+
+    <tstamp>
+        <format property="build.time" pattern="MM/dd/yyyy hh:mm aa" />
+    </tstamp>
+
+    <target name="all" depends="clean, dist" />
+
+    <target name="dist" depends="build">
+		<tar destfile="${dist}/${project.name}-${build.number}.tar.gz"
+			compression="gzip">
+			<tarfileset dir="${build}/${project.name}" 
+				prefix="${project.name}" />
+	    </tar>
+    </target>
+
+    <target name="build" depends="-init">
+    	<copy todir="${build}/${project.name}">
+    		<fileset dir="${src}" excludes="**/node_modules/**" />
+    	</copy>
+    </target>
+
+
+    <target name="-init" depends="set.build.number">
+        <mkdir dir="${build}"/>
+        <mkdir dir="${build}/${project.name}" />
+        <mkdir dir="${dist}" />
+        <!-- Create Version File -->
+        <echo file="${build}/${project.name}/version.txt" append="false">
+                ---------
+                ${project.name}
+                ---------
+                Build Number: ${build.number}
+                Build Time:   ${build.time}
+                BuildHost:    ${env.COMPUTERNAME}
+                Build User:   ${env.USERNAME}
+            </echo>
+    </target>
+
+    <target name="clean">
+        <delete dir="${dist}" />
+        <delete dir="${build}" />
+    </target>
+	<!--
+        Use the build.number property for versioning files.  When building on
+        your machine, you'll get something like "1.00-dev".  When the project
+        is built through hudson, we'll get something like "1.00-xxxx", where
+        xxxx is the svn revison number.
+
+        SVN_REVISOIN number is a property set by hudson, so use that to tell
+        where we're being built.
+    -->
+    <target name="set.build.number" depends="set.hudson.build.id,
+                set.dev.build.id">
+        <echo message="Build Number set to: ${build.number}" />
+    </target>
+    <target name="set.hudson.build.id" if="env.SVN_REVISION">
+        <property name="build.number"
+                    value="${version}-${env.SVN_REVISION}" />
+    </target>
+    <target name="set.dev.build.id" unless="env.SVN_REVISION">
+        <property name="build.number"
+            value="${version}-dev" />
+    </target>
+</project>
