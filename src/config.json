@@ -2,28 +2,7 @@
     "port": 8080,
     "buffersize": 5000,
     "files": [{
-        "id": "catalina.out",
-        "path": "/Users/bowmanmc/Apps/apache-tomcat-6.0.32/logs/catalina.out"
-    }, {
-        "id": "c1aw01",
-        "path": "/foo/bar/c1aw01.log"
-    }, {
-        "id": "c1aw02",
-        "path": "/foo/bar/c1aw02.log"
-    }, {
-        "id": "c1aw03",
-        "path": "/foo/bar/c1aw03.log"
-    }, {
-        "id": "c1aw04",
-        "path": "/foo/bar/c1aw04.log"
-    }, {
-        "id": "c1aw05",
-        "path": "/foo/bar/c1aw05.log"
-    }, {
-        "id": "c1aw06",
-        "path": "/foo/bar/c1aw06.log"
-    }, {
-        "id": "c1aw07",
-        "path": "/foo/bar/c1aw07.log"
+        "id": "test.log",
+        "path": "/tmp/test.log"
     }]
 }

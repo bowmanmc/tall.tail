@@ -75,6 +75,7 @@ server.listen(app.get('port'), function(){
 var sio = io.listen(server);
 //data = sio.of('/tail/data').on('connection', function(socket) {
 //sio.sockets.on('connection', function(socket) {
+//<< HERE >>  
 sio.of('/tail/data').on('connection', function(socket) {
   console.log('a connection was made!');
 
@@ -94,13 +95,14 @@ sio.of('/tail/data').on('connection', function(socket) {
       }
       console.log('@@@@ Start: ' + start + ' to ' + stats.size);
       var stream = fs.createReadStream(filedef.path, {
-        start: start, 
+        start: start,
         end: stats.size
       });
       stream.addListener("data", function(lines){
         lines = lines.toString('utf-8');
-        lines = lines.slice(lines.indexOf("\n")+1).split("\n");
-        socket.emit('data', { 
+        //lines = lines.slice(lines.indexOf("\n")+1).split("\n");
+        //lines = lines.split("\n");
+        socket.emit('data', {
           lines : lines
         });
       });
@@ -109,14 +111,15 @@ sio.of('/tail/data').on('connection', function(socket) {
       if (prev.size > curr.size) {
         return {clear:true};
       } 
-      var stream = fs.createReadStream(filedef.path, { 
+      var stream = fs.createReadStream(filedef.path, {
         start: prev.size, 
         end: curr.size
       });
       stream.addListener("data", function(lines) {
       //socket.broadcast({ tail : lines.toString('utf-8').split("\n") 
         socket.emit('data', {
-          lines: lines.toString('utf-8').split('\n')
+          //lines: lines.toString('utf-8').split('\n')
+          lines: lines.toString('utf-8')
         });
       });
     });

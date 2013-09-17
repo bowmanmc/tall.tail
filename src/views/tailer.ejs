@@ -6,10 +6,6 @@
 
     <title>tail/f/<%= file.id %></title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <!-- Le styles -->
     <link href="/tail/bootstrap/css/bootstrap-responsive.css" 
         rel="stylesheet">
     <link href="/tail/bootstrap/css/bootstrap.css" 
@@ -17,76 +13,50 @@
     <link href="/tail/styles/main.css"
         rel="stylesheet" />
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
-      </script>
-    <![endif]-->
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" 
-        href="assets/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" 
-        href="assets/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" 
-        href="assets/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" 
-        href="assets/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" 
-        href="assets/ico/apple-touch-icon-57-precomposed.png">
     <style>
     </style>
   </head>
   
   <body>
-    <div class="container">
-      <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-          <div class="container-fluid">
-            <a class="brand" href="/tail">
-              TallTail
-            </a>
-            <ul class="nav">
-              <li class="dropdown">
-                <a href="#" 
-                    class="dropdown-toggle"
-                    data-toggle="dropdown">
-                  Available Files
-                  <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <% files.forEach(function(file, i, arr){ %>
-                    <li><a href="/tail/f/<%= file.id %>">
-                        <%= file.id %>
-                    </a></li>
-                    <% }) %>
-                </ul>
-              </li>
-              <li><a><%= file.path %></a></li>
-            </ul>
-          </div>
-        </div><!-- navbar-inner -->
-      </div><!-- navbar -->
 
-      <h1>tailing file <%= file.id %></h1>
-    </div><!-- container -->
+<!-- Navbar -->
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <a class="brand" href="/tail">TallTail</a>
+      <ul class="nav">
+        <li class="dropdown">
+          <a href="#" 
+              class="dropdown-toggle"
+              data-toggle="dropdown">
+              Available Files
+              <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+              <% files.forEach(function(file, i, arr){ %>
+                <li><a href="/tail/f/<%= file %>"><%= file %></a></li>
+              <% }) %>
+          </ul>
+        </li>
+        <li><a><%= file.path %></a></li>
+      </ul>
+    </div>
+  </div><!-- navbar-inner -->
+</div><!-- navbar -->
+    
+
+<div id="tail"><div class="spacer">&nbsp;</div></div>
+
+<div id="status">Lines: <span id="linecount">0</span></div>
 
     <script src="/tail/jquery/jquery-1.8.1.min.js"></script>
     <script src="/tail/bootstrap/js/bootstrap.js"></script>
     <script src="/tail/socket.io/socket.io.js"></script>
+    <script src="/tail/javascript/tail.js"></script>
 
     <script>
-        // Setup a web socket for receiving tail data
-        var socket = io.connect('/tail/data');
-        // Tell the server which file we want to tail
-        socket.emit('tail', '<%= file.id %>');
-        // Respond to new lines in the file
-        socket.on('data', function(data) {
-            //console.log('got line "' + line + '" from the server!');
-            console.log('got ' + data.lines.length + ' lines!');
-            data.lines.forEach(function(line, i, arr) {
-              //console.log('line: "' + line + '"');
-            });
-        });
+        var tailer = new Tailer();
+        tailer.tail('<%= file.id %>');
     </script>
   </body>
 

@@ -8,7 +8,7 @@ if (typeof TallTail === 'undefined') {
    TallTail.files = {};
 }
 
-//TallTail.bufferSize = 5000;∑
+//TallTail.bufferSize = 5000;
 TallTail.bufferSize = 10;
 
 TallTail.tailFile = function(filedef) {
