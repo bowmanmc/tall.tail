@@ -4,6 +4,8 @@ Tailer = function() {
 	this.divSelector = '#' + this.divId;
 	this.setHeight();
 
+	this.forceScroll = true;
+
 	var tailer = this;
 	$(window).resize(function() {
 		tailer.setHeight();
@@ -48,6 +50,11 @@ Tailer.prototype.incrementLineCount = function(inc) {
 };
 
 Tailer.prototype.shouldScroll = function() {
+    if (this.forceScroll) {
+        this.forceScorll = false;
+        return true;
+    }
+
     var result = false;
     var elem = $(this.divSelector);
     var divHeight = elem.height();
@@ -63,6 +70,7 @@ Tailer.prototype.shouldScroll = function() {
 Tailer.prototype.scroll = function() {
     var elem = $(this.divSelector)
     var height = elem.get(0).scrollHeight;
+    console.log('ScrollTop: ' + height);
     elem.animate({
         scrollTop: height
     }, 500);

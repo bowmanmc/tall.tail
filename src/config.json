@@ -2,7 +2,7 @@
     "port": 8080,
     "buffersize": 5000,
     "files": [{
-        "id": "test.log",
-        "path": "/tmp/test.log"
+        "id": "nasa.txt",
+        "path": "/tmp/nasa.txt"
     }]
 }
