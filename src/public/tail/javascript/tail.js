@@ -1,33 +1,26 @@
 
-Tailer = function() {
+Tailer = function(fileIdIn) {
 	this.divId = 'tail';
 	this.divSelector = '#' + this.divId;
+	this.fileId = fileIdIn;
 	this.selectedText = '';
 
+	var tailer = this;
+
 	this.highlighter = new Highlighter();
+	this.filter = new Filter();
+	// catch highlighter/filter events off the document
+	$(document).on('update', function() {
+	    tailer.redraw();
+	});
 
-	//this.filters = [new RegExp('shuttle')];
-	this.filters = [];
     this.forceScroll = true;
-
 	this.setHeight();
 
-	var tailer = this;
+	
 	$(window).resize(function() {
 		tailer.setHeight();
 	});
-
-	// Filter UI Events
-	$('#new-filter-btn').hover(function() {
-	    tailer.selectedText = tailer.getSelection();
-	});
-	$('#new-filter-btn').click(function() {
-        tailer.promptNewFilter();
-    });
-};
-
-Tailer.prototype.promptNewFilter = function() {
-    console.log('new filter...');
 };
 
 Tailer.prototype.setHeight = function() {
@@ -38,10 +31,10 @@ Tailer.prototype.setHeight = function() {
 	$(this.divSelector).height(tailerHeight);
 };
 
-Tailer.prototype.tail = function(fileId) {
+Tailer.prototype.tail = function() {
 	var tailer = this;
 	var socket = io.connect('/tail/data');
-	socket.emit('tail', fileId);
+	socket.emit('tail', tailer.fileId);
 	socket.on('data', function(data) {
 	    tailer.handleLines(data.lines);
 	});
@@ -65,7 +58,7 @@ Tailer.prototype.handleLine = function(line) {
     var cls = "line";
 
     // filters
-    if (this.shouldFilterOut(line)) {
+    if (this.filter.shouldFilterOut(line)) {
         this.incrementHiddenCount(1);
         cls += " hidden";
     }
@@ -80,19 +73,34 @@ Tailer.prototype.handleLine = function(line) {
     this.incrementLineCount(1);
 };
 
-Tailer.prototype.shouldFilterOut = function(line) {
-    var len = this.filters.length;
-    if (len === 0) {
-        return false;
-    }
-    var filter, i;
-    for (i = 0; i < len; i++) {
-        filter = this.filters[i];
-        if (line.match(filter)) {
-            return false;
+Tailer.prototype.redraw = function() {
+    var tailer = this;
+    var total = 0;
+    var hidden = 0;
+    $('#linecount').html(total);
+    $('#hiddencount').html(hidden);
+    $('.line').each(function() {
+        var html = $(this).html();
+        total++;
+        if (tailer.filter.shouldFilterOut(html)) {
+            $(this).hide();
+            hidden++;
         }
-    }
-    return true;
+        else {
+            $(this).removeClass('hidden');
+            $(this).show();
+        }
+
+        var color = tailer.highlighter.getHighlightColor(html);
+        if (color !== null) {
+            $(this).css('color', color);
+        }
+        else {
+            $(this).css('color', 'inherit');
+        }
+    });
+    $('#linecount').html(total);
+    $('#hiddencount').html(hidden);
 };
 
 Tailer.prototype.incrementHiddenCount = function(inc) {

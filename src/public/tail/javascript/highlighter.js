@@ -30,7 +30,6 @@ Highlighter.prototype.loadHighlighters = function() {
         return [];
     }
     return JSON.parse(c);
-    
 };
 
 Highlighter.prototype.saveState = function() {
@@ -70,7 +69,7 @@ Highlighter.prototype.saveHighlighter = function() {
     this.saveState();
 
     // reload the colors for everything
-    this.redraw();
+    $(document).trigger('update');
 };
 
 Highlighter.prototype.redraw = function() {
@@ -111,7 +110,7 @@ Highlighter.prototype.removeHighlighter = function(h) {
         this.highlighters.splice(index, 1);
         this.buildMenu();
         this.saveState();
-        this.redraw();
+        $(document).trigger('update');
     }
 };
 
