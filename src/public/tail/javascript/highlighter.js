@@ -68,6 +68,24 @@ Highlighter.prototype.saveHighlighter = function() {
 
     // store the new state
     this.saveState();
+
+    // reload the colors for everything
+    this.redraw();
+};
+
+Highlighter.prototype.redraw = function() {
+    var highlighter = this;
+    // go through the lines and update them if needed...
+    $('.line').each(function() {
+        var html = $(this).html();
+        var color = highlighter.getHighlightColor(html);
+        if (color !== null) {
+            $(this).css('color', color);
+        }
+        else {
+            $(this).css('color', 'inherit');
+        }
+    });  
 };
 
 Highlighter.prototype.buildMenu = function() {
@@ -77,7 +95,7 @@ Highlighter.prototype.buildMenu = function() {
     var item, i;
     for (i = 0; i < len; i++) {
         item = this.highlighters[i];
-        var li = $('<li class="highlighter-entry" />');
+        var li = $('<li class="menu-entry highlighter-entry" />');
         li.append('<a><span class="glyphicon glyphicon-remove"></span> ' + 
                   item.re + '</a>');
         li.click([item], function(event) {
@@ -93,6 +111,7 @@ Highlighter.prototype.removeHighlighter = function(h) {
         this.highlighters.splice(index, 1);
         this.buildMenu();
         this.saveState();
+        this.redraw();
     }
 };
 

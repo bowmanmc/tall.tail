@@ -13,6 +13,9 @@ body {
 .line:hover {
   background: #222;
 }
+.menu-entry {
+  cursor: pointer;
+}
 .spacer {
   height: 47px;
 }
