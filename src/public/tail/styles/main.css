@@ -1,6 +1,9 @@
 body {
   background: #111;
 }
+.colorpicker {
+  z-index: 1050;
+}
 .index-content {
   margin-top: 70px;
 }

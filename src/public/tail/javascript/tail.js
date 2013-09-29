@@ -2,14 +2,32 @@
 Tailer = function() {
 	this.divId = 'tail';
 	this.divSelector = '#' + this.divId;
-	this.setHeight();
+	this.selectedText = '';
 
-	this.forceScroll = true;
+	this.highlighter = new Highlighter();
+
+	//this.filters = [new RegExp('shuttle')];
+	this.filters = [];
+    this.forceScroll = true;
+
+	this.setHeight();
 
 	var tailer = this;
 	$(window).resize(function() {
 		tailer.setHeight();
 	});
+
+	// Filter UI Events
+	$('#new-filter-btn').hover(function() {
+	    tailer.selectedText = tailer.getSelection();
+	});
+	$('#new-filter-btn').click(function() {
+        tailer.promptNewFilter();
+    });
+};
+
+Tailer.prototype.promptNewFilter = function() {
+    console.log('new filter...');
 };
 
 Tailer.prototype.setHeight = function() {
@@ -36,12 +54,50 @@ Tailer.prototype.handleLines = function(linesIn) {
     var shouldScroll = this.shouldScroll();
     for (i = 0; i < len; i++) {
         line = lines[i];
-        $(this.divSelector).append('<div class="line">' + line + '</div>');
+        this.handleLine(line);
     }
     if (shouldScroll) {
         this.scroll();
     }
-    this.incrementLineCount(len);
+};
+
+Tailer.prototype.handleLine = function(line) {
+    var cls = "line";
+
+    // filters
+    if (this.shouldFilterOut(line)) {
+        this.incrementHiddenCount(1);
+        cls += " hidden";
+    }
+
+    var div = '<div class="' + cls + '">' + line + '</div>';
+    var el = $(div).appendTo(this.divSelector);
+    var color = this.highlighter.getHighlightColor(line);
+    if (color !== null) {
+        el.css('color', color);
+    }
+    
+    this.incrementLineCount(1);
+};
+
+Tailer.prototype.shouldFilterOut = function(line) {
+    var len = this.filters.length;
+    if (len === 0) {
+        return false;
+    }
+    var filter, i;
+    for (i = 0; i < len; i++) {
+        filter = this.filters[i];
+        if (line.match(filter)) {
+            return false;
+        }
+    }
+    return true;
+};
+
+Tailer.prototype.incrementHiddenCount = function(inc) {
+    var current = parseInt($('#hiddencount').html());
+    $('#hiddencount').html((current + inc));
 };
 
 Tailer.prototype.incrementLineCount = function(inc) {
@@ -70,7 +126,6 @@ Tailer.prototype.shouldScroll = function() {
 Tailer.prototype.scroll = function() {
     var elem = $(this.divSelector)
     var height = elem.get(0).scrollHeight;
-    console.log('ScrollTop: ' + height);
     elem.animate({
         scrollTop: height
     }, 500);
