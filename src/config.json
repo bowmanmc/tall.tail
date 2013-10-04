@@ -1,8 +1,11 @@
 {
-    "port": 8080,
+    "port": 9000,
     "buffersize": 5000,
     "files": [{
         "id": "nasa.txt",
         "path": "/tmp/nasa.txt"
+    }, {
+        "id": "access.log",
+        "path": "/tmp/access.log"
     }]
 }

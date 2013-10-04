@@ -7,8 +7,8 @@ Tailer = function(fileIdIn) {
 
 	var tailer = this;
 
-	this.highlighter = new Highlighter();
-	this.filter = new Filter();
+	this.highlighter = new Highlighter(this.fileId);
+	this.filter = new Filter(this.fileId);
 	// catch highlighter/filter events off the document
 	$(document).on('update', function() {
 	    tailer.redraw();
@@ -115,7 +115,7 @@ Tailer.prototype.incrementLineCount = function(inc) {
 
 Tailer.prototype.shouldScroll = function() {
     if (this.forceScroll) {
-        this.forceScorll = false;
+        this.forceScroll = false;
         return true;
     }
 
