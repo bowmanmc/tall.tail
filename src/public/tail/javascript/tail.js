@@ -1,5 +1,6 @@
 
 Tailer = function(fileIdIn) {
+    this.MAX_SIZE = 10000;
 	this.divId = 'tail';
 	this.divSelector = '#' + this.divId;
 	this.fileId = fileIdIn;
@@ -52,6 +53,7 @@ Tailer.prototype.handleLines = function(linesIn) {
     if (shouldScroll) {
         this.scroll();
     }
+    this.tidyUp();
 };
 
 Tailer.prototype.handleLine = function(line) {
@@ -139,4 +141,20 @@ Tailer.prototype.scroll = function() {
     }, 500);
 };
 
-
+Tailer.prototype.tidyUp = function() {
+    // if we have more than MAX_SIZE, remove AXE_SIZE of them... trying to 
+    // get a number
+    // large enough that most people won't notice, but small enough that we
+    // don't kill our browser's memory
+    var tailer = this;
+    var beforeLen = $(".line").length;
+    if (beforeLen >= tailer.MAX_SIZE) {
+        var AXE_SIZE = tailer.MAX_SIZE / 2;
+        $(".line").slice(0, AXE_SIZE).each(function() {
+            $(this).remove();
+        });
+        tailer.redraw();
+    }
+    var afterLen = $(".line").length;
+    //console.log("Length: " + beforeLen + "/" + afterLen + " [before/after tidying up]");
+}; 
