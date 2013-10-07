@@ -85,14 +85,23 @@
     </li>
     </li> <!-- highlight dropdown -->
 
-    <li><p class="navbar-text"><%= file.path %></p></li>
+    <li>
+      <a href="/tail/download/<%= file.id %>">
+        <span class="glyphicon glyphicon-save"></span> Download
+      </a>      
+    </li>
+
+    <li>
+      <p class="navbar-text"><%= file.path %></p>
+    </li>
+
   </ul>
   
 </div><!-- navbar -->
 
 <div id="tail"><div class="spacer">&nbsp;</div></div>
 
-<div id="status">
+<div id="status" class="hidden">
     Total Lines: <span id="linecount">0</span>
     Hidden Lines: <span id="hiddencount">0</span>
 </div>
