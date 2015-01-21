@@ -1,15 +1,15 @@
 {
-  "name": "application-name",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "node app"
-  },
-  "dependencies": {
-    "express": "*",
-    "ejs": "*",
-    "nconf": "*",
-    "socket.io": "*",
-    "stylus": "*"
-  }
+    "name": "application-name",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "start": "node app"
+    },
+    "dependencies": {
+        "express": "3.12.1",
+        "ejs": "2.1.4",
+        "nconf": "*",
+        "socket.io": "0.9",
+        "stylus": "0.49.3"
+    }
 }
