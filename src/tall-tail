@@ -1,0 +1,17 @@
+[Unit]
+Description=tall-tail
+
+[Service]
+ExecStart=/usr/bin/node /opt/node/tall.tail/app.js
+WorkingDirectory=/opt/node/tall.tail
+Restart=always
+# Restart service after 10 seconds if node service crashes
+RestartSec=10
+# Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=tall-tail
+
+[Install]
+Alias=tall-tail
+WantedBy=default.target
